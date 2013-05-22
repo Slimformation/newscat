@@ -4,7 +4,8 @@
             [clojure.java.jdbc.sql :as s]
             [clj-http.client :as client]
             [clojure.data.json :as json])
-  (:use [boilerpipe-clj.core]))
+  (:use [boilerpipe-clj.core]
+        [newscat.db]))
 
 
 (defn get-article-text
@@ -16,27 +17,6 @@
 (def query-template
   "http://www.reddit.com/r/subreddit/new.json?sort=top&limit=50")
 
-(def categories
-  ["politics" "business" "technology"
-   "sports" "science" "entertainment"])
-
-(def db
-  {:classname   "org.sqlite.JDBC"
-   :subprotocol "sqlite"
-   :subname     "database.db"
-   })
-
-(defn create-cat-table [category]
-  (try (j/with-connection db
-         (j/create-table category
-                         [:url :text]
-                         [:content :text]))
-       (catch Exception e (println e))))
-
-(defn make-tables
-  "creates all the category tables in the database defined as 'db'"
-  []
-  (map #(create-cat-table %) categories))
 
 (defn run-query
   "Given a category, run a query and return results"

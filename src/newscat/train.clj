@@ -3,7 +3,8 @@
             [clojure.java.io :as io])
   (:use [opennlp.nlp]
        ; [opennlp.treebank]
-        [opennlp.tools.train]))
+        [opennlp.tools.train]
+        [newscat.db]))
 
 ; write functions to access raw text, tokenize and clean it up, and
 ; then compact it. Eventually, create a training file that OpenNLP
