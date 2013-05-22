@@ -427,3 +427,7 @@ youngest
 your
 yours
 z
+.
+,
+!
+?
