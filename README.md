@@ -11,11 +11,7 @@ The following categories will be considered:
 - Technology
 - Sports
 - Science
-- Health
-- Arts
-- Style
-- Music
-- Education
-- Environment
-- Travel
-- Gaming
+- Entertainment
+
+To make things quick, we'll just grab some articles from subreddits of
+the same name and train a model based on that.
