@@ -10,7 +10,8 @@
 (defn get-article-text
   "Given a URL, extracts the article text and returns it as a string"
   [url]
-  (get-text (slurp url)))
+  (try (get-text (slurp url))
+       (catch Exception e "")))
 
 (def query-template
   "http://www.reddit.com/r/subreddit/new.json?sort=top&limit=50")
@@ -40,12 +41,14 @@
 (defn run-query
   "Given a category, run a query and return results"
   [category query-template]
-  (try (:body
-        (client/get
-         (string/replace query-template
-                         #"subreddit"
-                         category)))
-       (catch Exception e (println e))))
+  (:body
+   (try 
+     (client/get
+      (string/replace query-template
+                      #"subreddit"
+                      category))
+     (catch Exception e (do (println e)
+                            {:body {:error e}})))))
 
 
 (defn extract-text
