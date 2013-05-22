@@ -1,13 +1,21 @@
-# newscat
+# NewsCat
 
-A Clojure library designed to ... well, that part is up to you.
+A categorizer that uses a ground truth collection of articles about a
+certain set of topics and then categorizes new articles based on a
+trained model.
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2013 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+The following categories will be considered:
+ 
+- Politics
+- Business
+- Technology
+- Sports
+- Science
+- Health
+- Arts
+- Style
+- Music
+- Education
+- Environment
+- Travel
+- Gaming
