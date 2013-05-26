@@ -12,7 +12,7 @@
    :subname     "database.db"
    })
 
-(defn create-cat-table [category]
+(defn create-cat-table [db category]
   (try (j/with-connection db
          (j/create-table category
                          [:url :text]
@@ -21,5 +21,12 @@
 
 (defn make-tables
   "creates all the category tables in the database defined as 'db'"
-  []
-  (map #(create-cat-table %) categories))
+  [db]
+  (map #(create-cat-table db %) categories))
+
+(defn all-examples-of-category
+  "Given a category name from `categories` and a db, returns the
+   tuples as a seq of {:content '...'} maps"
+  [db category]
+  (j/query db
+           (s/select :content category)))
