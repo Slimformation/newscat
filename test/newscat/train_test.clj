@@ -12,3 +12,8 @@
                          stop-words
                          tokenizer)
            #{"store" "I"}))))
+
+(deftest training-example-for-test
+  (testing "Whether a simple case works"
+    (is (= (training-example-for "politics" #{"government" "world"})
+           "politics government world"))))

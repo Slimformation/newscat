@@ -36,5 +36,35 @@
   "Given a category name and a db, process every example and return
    a seq of sets of words"
   [db category stop-words-fn tokenizer]
-  (map #(bag-of-words (->> % :content) stop-words-fn tokenizer)
-       (all-examples-of-category db category)))
+  (->> (map #(bag-of-words (->> % :content) stop-words-fn tokenizer)
+            (all-examples-of-category db category))
+       (filter #(not= (count %) 0))))
+
+(defn training-example-for
+  "Given a category name and a seq containing words that should be trained,
+   produce a string that will represent the training example,
+   like described in http://opennlp.apache.org/documentation/1.5.3/manual/opennlp.html#tools.doccat.training"
+  [category words-seq]
+  (string/join " " (cons category words-seq)))
+
+(defn train-for-category
+  "Creates a training example for each example for the given category
+   name."
+  [db category stop-words-fn tokenizer]
+  (map #(training-example-for category %)
+       (process-category db category stop-words-fn tokenizer)))
+
+(defn produce-model
+  "given a seq of categories, produces all training examples of all categories"
+  [db categories stop-words-fn tokenizer]
+  (flatten (map #(train-for-category db % stop-words-fn tokenizer)
+                categories)))
+
+(defn write-training-file
+  "write a sequence of strings representing training examples to the given file name"
+  ([filename] (write-training-file filename db categories stop-words tokenizer))
+  ([filename db categories stop-words-fn tokenizer]
+     (->> (produce-model db categories stop-words-fn tokenizer)
+          (interpose \newline)
+          (reduce str)
+          (spit filename))))
