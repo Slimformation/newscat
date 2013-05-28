@@ -6,11 +6,14 @@
         [opennlp.tools.train]
         [newscat.db]))
 
+;; Training Functions
 ; write functions to access raw text, tokenize and clean it up, and
 ; then compact it. Eventually, create a training file that OpenNLP
 ; expects to find.
 
-(def tokenizer (make-tokenizer (io/resource "en-token.bin")))
+(defn tokenizer
+  []
+  (make-tokenizer (io/resource "en-token.bin")))
 
 (defn stop-words
   "Function that returns a set of stop words when called"
@@ -28,15 +31,15 @@
 (defn bag-of-words
   "takes a string, a set of stop words, and a tokenizer and removes
    any stop words, returning a tokenized set of words"
-  [str stop-words-fn tokenizer]
-  (set (filter-stop-words (tokenizer str)
+  [str stop-words-fn tokenizer-fn]
+  (set (filter-stop-words ((tokenizer-fn) str)
                           stop-words-fn)))
 
 (defn process-category
   "Given a category name and a db, process every example and return
    a seq of sets of words"
-  [db category stop-words-fn tokenizer]
-  (->> (map #(bag-of-words (->> % :content) stop-words-fn tokenizer)
+  [db category stop-words-fn tokenizer-fn]
+  (->> (map #(bag-of-words (->> % :content) stop-words-fn tokenizer-fn)
             (all-examples-of-category db category))
        (filter #(not= (count %) 0))))
 
@@ -50,21 +53,33 @@
 (defn train-for-category
   "Creates a training example for each example for the given category
    name."
-  [db category stop-words-fn tokenizer]
+  [db category stop-words-fn tokenizer-fn]
   (map #(training-example-for category %)
-       (process-category db category stop-words-fn tokenizer)))
+       (process-category db category stop-words-fn tokenizer-fn)))
 
 (defn produce-model
   "given a seq of categories, produces all training examples of all categories"
-  [db categories stop-words-fn tokenizer]
-  (flatten (map #(train-for-category db % stop-words-fn tokenizer)
+  [db categories stop-words-fn tokenizer-fn]
+  (flatten (map #(train-for-category db % stop-words-fn tokenizer-fn)
                 categories)))
 
 (defn write-training-file
   "write a sequence of strings representing training examples to the given file name"
-  ([filename] (write-training-file filename db categories stop-words tokenizer))
-  ([filename db categories stop-words-fn tokenizer]
-     (->> (produce-model db categories stop-words-fn tokenizer)
-          (interpose \newline)
-          (reduce str)
-          (spit filename))))
+  [filename db categories stop-words-fn tokenizer-fn]
+  (->> (produce-model db categories stop-words-fn tokenizer-fn)
+       (interpose \newline)
+       (reduce str)
+       (spit filename)))
+
+;; Categorizer Functions
+;; assuming training data is collected
+
+(defn news-model-trainer
+  "computes and returns a model based on training data"
+  []
+  (train-document-categorization "models/doc.train"))
+
+(defn newscat
+  "makes a categorizer, given a function that computes a model"
+  [model-fn]
+  (make-document-categorizer (model-fn)))
