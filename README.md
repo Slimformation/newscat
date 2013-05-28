@@ -15,3 +15,17 @@ The following categories will be considered:
 
 To make things quick, we'll just grab some articles from subreddits of
 the same name and train a model based on that.
+
+## Developing
+
+I use the excellent `environ`, which is `[environ "0.4.0"]`. Check it
+out [here](https://github.com/weavejester/environ). This means you need
+`{:user {:env {:readability-parser-api-token "blah"}}}` in your
+`~/.lein/profiles.clj`.
+
+
+## Deploying
+
+If deploying to Heroku, you need to `heroku config:set
+READABILITY_PARSER_API_TOKEN=blah`.
+
