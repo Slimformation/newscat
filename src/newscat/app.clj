@@ -16,8 +16,11 @@
                     :headers {"Content-Type" "application/json"}
                     :body content})
 
-(defn content-extract-sub
-  "Sub function of newscat.app/content-extract"
+
+
+(defn readability-parse
+  "Given a url, queries Readability Parser API and parses JSON response
+  into hash-map"
   [url]
   (let [endpoint "http://www.readability.com/api/content/v1/parser?"
         token    (env :readability-parser-api-token)
@@ -28,28 +31,29 @@
          (catch Exception e {:error e}))))
 
 (defn content-extract
-  "Uses Readability Parser API to extract information about url."
-  [url]
-  (let [res (content-extract-sub url)]
-    (if (contains? res :error)
-      ""
-      (->> res :content Jsoup/parse .text))))
+  "Given a url-details hash-map (returned by readability-parse), parses
+   and returns the article content as a plain text string"
+  [url-details]  
+  (if (contains? url-details :error)
+    ""
+    (->> url-details :content Jsoup/parse .text)))
 
 
 (def categorizer
+  "The actual categorizer"
   (train/newscat))
 
 (defn categorize
   "Request handler"
   [params]
   (try
-    (wrap-response (json/write-str  
-                    (categorizer (->> params
-                                      vec
-                                      flatten
-                                      second
-                                      content-extract)))
-                   202)
+    (wrap-response
+     (json/write-str
+      (let [url-details
+            (readability-parse (->> params vec flatten second))]
+        (merge url-details
+               (categorizer (content-extract url-details)))))
+     202)
     (catch Exception e
       (wrap-response e
                      409))))
