@@ -9,7 +9,7 @@
 (def db
   {:classname   "org.sqlite.JDBC"
    :subprotocol "sqlite"
-   :subname     "database.db"
+   :subname     "resources/database.db"
    })
 
 (defn create-cat-table [db category]

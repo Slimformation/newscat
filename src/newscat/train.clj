@@ -2,7 +2,6 @@
   (:require [clojure.string :as string]
             [clojure.java.io :as io])
   (:use [opennlp.nlp]
-       ; [opennlp.treebank]
         [opennlp.tools.train]
         [newscat.db]))
 
@@ -80,6 +79,6 @@
   (train-document-categorization "models/doc.train"))
 
 (defn newscat
-  "makes a categorizer, given a function that computes a model"
-  [model-fn]
-  (make-document-categorizer (model-fn)))
+  "makes a categorizer, assuming a bin file of the model exists"
+  []
+  (make-document-categorizer "models/doc.bin"))

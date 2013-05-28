@@ -9,5 +9,15 @@
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [org.clojure/data.json "0.2.2"]
-                 [clojure-opennlp "0.3.0"]]
-  :resource-paths ["resources" "models"])
+                 [clojure-opennlp "0.3.0"]
+                 [lib-noir "0.4.6"]
+                 [compojure "1.1.5"]
+                 [ring-server "0.2.8"]
+                 [org.jsoup/jsoup "1.7.2"]
+                 [environ "0.4.0"]]
+  :plugins [[lein-ring "0.8.5"]
+            [lein-environ "0.4.0"]]
+  :resource-paths ["resources" "models"]
+  :min-lein-version "2.0.0"
+  :ring {:handler newscat.app/app}
+  :main ^:skip-aot newscat.core)
