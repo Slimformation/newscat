@@ -5,4 +5,4 @@
 
 (defn -main
   [port]
-  (serve app {:port (:port (Integer. port))}))
+  (serve app {:port (Integer. port)}))

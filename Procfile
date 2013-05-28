@@ -1,1 +1,1 @@
-web: lein trampoline with-profile production run newscat $PORT
+web: lein trampoline with-profile production run $PORT
