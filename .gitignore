@@ -1,6 +1,5 @@
 database.db
-target
-.lein-failures
-.lein-repl-history
-src/newscat/config.clj
-.lein-env
+/target
+/pom.xml
+/.lein-*
+/.env

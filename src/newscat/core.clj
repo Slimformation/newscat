@@ -4,5 +4,5 @@
   (:gen-class))
 
 (defn -main
-  [& m]
-  (serve app))
+  [port]
+  (serve app {:port (:port (Integer. port))}))
