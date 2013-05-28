@@ -1,4 +1,5 @@
 (ns newscat.train
+  "Functions for taking training data and making a model using them."
   (:require [clojure.string :as string]
             [clojure.java.io :as io])
   (:use [opennlp.nlp]
@@ -11,6 +12,7 @@
 ; expects to find.
 
 (defn tokenizer
+  "Returns a new tokenizer when called"
   []
   (make-tokenizer (io/resource "en-token.bin")))
 

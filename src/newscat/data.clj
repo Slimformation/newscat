@@ -1,4 +1,5 @@
 (ns newscat.data
+  "Functions for gathering data to make training examples."
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as j]
             [clojure.java.jdbc.sql :as s]
@@ -14,6 +15,7 @@
        (catch Exception e "")))
 
 (def query-template
+  "a template for how Reddit queries will be done"
   "http://www.reddit.com/r/subreddit/new.json?sort=top&limit=50")
 
 

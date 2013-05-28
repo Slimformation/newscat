@@ -1,4 +1,5 @@
 (ns newscat.app
+  "Sets up the web app's routes and handlers"
   (:require [clojure.data.json :as json]
             [compojure.handler :as handler]
             [compojure.route :as route]
